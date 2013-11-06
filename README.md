@@ -25,9 +25,12 @@ Scheme（Lisp）远比C语言要亲和数据结构：广义表（S-表达式）�
 
 # 参考文献
 
+下面陈列的文献都是学习Scheme（Lisp）很好的资料。读者可以从这些文献的出版日期从感受到厚重的历史底蕴。
+
 + Allen J. Anatomy of LISP[M]. McGraw-Hill, Inc., 1978.
 + Siklossy L. Let's talk LISP[M]. Englewood Cliffs, NJ: Prentice-Hall, 1976.
 + Sussman G, Abelson H, Sussman J. Structure and interpretation of computer programs[J]. The Massachusetts Institute of Technology, 1985, 10.
++ Friedman D P. The Little Schemer[M]. The MIT Press, 1996.
 
 # 联系我
 
