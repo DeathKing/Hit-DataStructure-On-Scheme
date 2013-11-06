@@ -13,7 +13,7 @@
 
 (define (atom? x)
   (and (not (null? x))
-       (not (list? x))))
+       (not (pair? x))))
 
 (define (tree? tree)
   (cond ((null? tree) #f)
@@ -75,6 +75,18 @@
 (define (build-from-layer-walk sequence)
   ())
 
+(define (tree-general-list-print tree)
+  (cond
+    ((null? tree) nil)
+    ((leaf? tree) (display (tree-data tree)))
+    (else
+      (begin (display (tree-data tree))
+        (display "(")
+        (tree-general-list-print (tree-left tree))
+        (display ",")
+        (tree-general-list-print (tree-right tree))
+        (display ")")))))
+
 (define l (make-tree 'A 
                      (make-tree 'B nil (make-leaf 'E))
                      (make-tree 'C (make-leaf 'D)
@@ -89,3 +101,5 @@
 (postorder-print-tree l)
 (newline)
 (layer-walk l)
+(newline)
+(tree-general-list-print l)
