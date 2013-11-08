@@ -1,4 +1,3 @@
-;;;;
 ;;;; Simple stack implementation.
 ;;;;
 ;;;; Written by: DeathKing<dk@hit.edu.cn>
@@ -42,4 +41,15 @@
     (let ((ret (car (stack s))))
       (set-cdr! s (cdr (stack s)))
       ret)))
+
+(define (stack-reverse! s)
+  (set-cdr! s (reverse (stack s)))
+  s)
+
+(define (list->stack l)
+  (cons 'stack (reverse l)))
+
+(define (stack->list s)
+  (reverse (stack s)))
+
 

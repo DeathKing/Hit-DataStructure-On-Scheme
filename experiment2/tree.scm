@@ -47,15 +47,15 @@
           (tree-traversal (do-third tree)  do-first do-second do-third do-atom))))))
 
 ; Preorder tree traversal and print 
-(define (preorder-print-tree tree)
+(define (tree-preorder-print tree)
   (tree-traversal tree tree-data tree-left tree-right display))
 
 ; Inorder tree traversal and print 
-(define (inorder-print-tree tree)
+(define (tree-inorder-print tree)
   (tree-traversal tree tree-left tree-data tree-right display))
 
 ; Postorder tree traversal and print 
-(define (postorder-print-tree tree)
+(define (tree-postorder-print tree)
   (tree-traversal tree tree-left tree-right tree-data display))
 
 ; Layer tree walking
@@ -94,11 +94,11 @@
 (display l)
 
 (newline)
-(preorder-print-tree l)
+(tree-preorder-print l)
 (newline)
-(inorder-print-tree l)
+(tree-inorder-print l)
 (newline)
-(postorder-print-tree l)
+(tree-postorder-print l)
 (newline)
 (layer-walk l)
 (newline)
