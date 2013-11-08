@@ -25,6 +25,7 @@
     ((eq? operator /) (+ *base* 1))
     ((eq? operator expt) (+ *base* 2))
     ((eq? operator modulo) (+ *base* 2))
+    ((string=? operator "(") (+ *base* 5))
     (else (- *base* 1))))
 
 ;; Does s is a operator?
@@ -32,7 +33,11 @@
 (define (string-operator? s)
   (case (string->symbol s)
     ((+ - * / ^ %) #t)
-    (else #f)))
+    (else
+      (cond
+        ((string=? "(" s) #t)
+        ((string=? ")" s) #t)
+        (else #f)))))
 
 ;; Get input and parse to Reverse Polish Expression
 ;; Returns a expression that contain procedure and number.
@@ -42,24 +47,30 @@
   (define expression (make-stack))
 
   (let ((s (str-split (read-string (string->char-set "\n")) #\space)))
-    (do ((s s (cdr s))
-         (e (car s) (car s)))
-      ((stack-empty? s) expression)
-      (if (string-operator? e)
-        (cond
-          ((string=? "(" e) (stack-push! operator-stack "("))
-          ((string=? ")" e)
-            (do ()
-              ((string=? (stack-top operator-stack) "(")
-               (stack-pop! operator-stack))
-              (stack-push! expression (stack-pop! operator-stack))))
-          ((> (procedure-priority (string-eval-operator e))
-              (procedure-priority (stack-top operator-stack)))
-            (stack-push! operator-stack (string-eval-operator e)))
-          (else
-            (stack-push! expression (stack-pop! operator-stack))
-            (stack-push! operator-stack (string-eval-operator e))))
-        (stack-push! expression (string->number e)))))
+    (do ((s s (cdr s)))
+      ((null? s) expression)
+      (let ((e (car s)))
+        (if (string-operator? e)
+          (cond
+            ((string=? "(" e) (stack-push! operator-stack "("))
+            ((string=? ")" e)
+              (do ()
+                ((string=? (stack-top operator-stack) "(")
+                 (stack-pop! operator-stack))
+                (stack-push! expression (stack-pop! operator-stack))))
+            ((stack-empty? operator-stack)
+              (stack-push! operator-stack (string-eval-operator e)))
+            ((> (procedure-priority (string-eval-operator e))
+                (procedure-priority (stack-top operator-stack)))
+              (stack-push! operator-stack (string-eval-operator e)))
+            (else
+              (stack-push! expression (stack-pop! operator-stack))
+              (stack-push! operator-stack (string-eval-operator e))))
+          (stack-push! expression (string->number e))))))
+
+  (do ()
+    ((stack-empty? operator-stack))
+    (stack-push! expression (stack-pop! operator-stack)))
   
   (stack-reverse! expression)
   expression)
