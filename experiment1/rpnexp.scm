@@ -3,6 +3,7 @@
 ;;; Written by: DeathKing<dk@hit.edu.cn>
 
 (load "stack.scm")
+(load "string.scm")
 
 ;; Eval operator to procedure.
 ;; For many reasons, We didn't use the eval procedure.
@@ -15,34 +16,53 @@
     ((^) expt)
     ((%) modulo)))
 
+(define (procedure-priority operator)
+  (define *base* 0)
+  (cond
+    ((eq? operator +) *base*)
+    ((eq? operator -) *base*)
+    ((eq? operator *) (+ *base* 1))
+    ((eq? operator /) (+ *base* 1))
+    ((eq? operator expt) (+ *base* 2))
+    ((eq? operator modulo) (+ *base* 2))
+    (else (- *base* 1))))
+
 ;; Does s is a operator?
 ;; Returns #t only when s is any of + - * / ^ %
 (define (string-operator? s)
   (case (string->symbol s)
-    (( + - * / ^ %) #t)
+    ((+ - * / ^ %) #t)
     (else #f)))
 
-;(define (input-and-parse . port)
-; 
-;  (define operator-stack (make-stack))
-;  (define operand-stack (make-stack))
-;  (define expression (make-stack))
-;
-;  (if (or (null? port)
-;          (input-port? port))
-;    (error "Not a valid input port!" input-and-parse port)
-;    (let ((port (or (if (null? port) #f port)
-;                    (current-input-port))))
-;      (let loop ((e (read)))
-;        (cond
-;          ((string=? e "(") (stack-push! s "(")))))))
-;;        (case e
-  ;;        (("(") (stack-push! operator-stack e))
-    ;;      ((")") (let pop-parentheses ((c (stack-pop! s)))
-      ;;             (if (string=? c "(")
-        ;;             loop
-          ;;           pop-parentheses)))
-         ;; (("*"))
+;; Get input and parse to Reverse Polish Expression
+;; Returns a expression that contain procedure and number.
+(define (input-and-parse)
+ 
+  (define operator-stack (make-stack))
+  (define expression (make-stack))
+
+  (let ((s (str-split (read-string (string->char-set "\n")) #\space)))
+    (do ((s s (cdr s))
+         (e (car s) (car s)))
+      ((stack-empty? s) expression)
+      (if (string-operator? e)
+        (cond
+          ((string=? "(" e) (stack-push! operator-stack "("))
+          ((string=? ")" e)
+            (do ()
+              ((string=? (stack-top operator-stack) "(")
+               (stack-pop! operator-stack))
+              (stack-push! expression (stack-pop! operator-stack))))
+          ((> (procedure-priority (string-eval-operator e))
+              (procedure-priority (stack-top operator-stack)))
+            (stack-push! operator-stack (string-eval-operator e)))
+          (else
+            (stack-push! expression (stack-pop! operator-stack))
+            (stack-push! operator-stack (string-eval-operator e))))
+        (stack-push! expression (string->number e)))))
+  
+  (stack-reverse! expression)
+  expression)
 
 ;; Calculate the reverse polish expression.
 ;; We use a stack named operand-stack to save the calculate buff.
@@ -63,8 +83,4 @@
         (stack-push! operand-stack proc))))
   (stack-top operand-stack))
 
-(define s (list->stack (list 2 3 expt 3 expt)))
-(stack-reverse! s)
-(display s)
-(newline)
-(display (calculate s))
+(display (calculate (input-and-parse)))
