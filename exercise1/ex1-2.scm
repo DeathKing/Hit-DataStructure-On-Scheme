@@ -1,7 +1,9 @@
+;;; Find the max and the second max element in a list
+;;;
+;;; Written: DeathKing<dk@hit.edu.cn>
+
 (define (find-maxs l)
   (define (find-maxs-iter lst ans)
-    (display ans)
-    (display (cdr ans ))
     (if (null? lst)
       ans
       (if (> (car lst) (car ans))
