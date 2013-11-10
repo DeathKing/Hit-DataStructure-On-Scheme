@@ -1,5 +1,11 @@
-; Operation on binary tree 
-; We simulate it by using list in Lisp
+;;; Binary Tree Operation
+;;;
+;;; For some reasons, we don't recomand you use this code,
+;;; it is easy to understand for newbies, but it isn't powerful.
+;;; You can see a more powerful general strategy in bin-tree+.scm
+;;;
+;;; Written: DeathKing<dk@hit.edu.cn>
+
 (define nil '())
 
 (define (type data)
@@ -20,6 +26,9 @@
         ((atom? tree) #f)
         (else (eq? (type tree) 'tree))))
 
+(define (node? node)
+  (tree? node))
+
 (define (leaf? leaf)
   (and (not (tree? leaf))
        (eq? (type leaf) 'leaf)))
@@ -38,9 +47,13 @@
   (if (null? tree)
     nil
     (if (atom? tree)
-      (do-atom tree)
+      (begin
+        (do-atom tree)
+        tree)
       (if (leaf? tree)
-        (do-atom (tree-data tree))
+        (begin
+          (do-atom (tree-data tree))
+          tree)
         (begin
           (tree-traversal (do-first tree)  do-first do-second do-third do-atom)
           (tree-traversal (do-second tree) do-first do-second do-third do-atom)
@@ -71,9 +84,6 @@
                   (display (tree-data item))
                   (layer-walk-iter (cdr (append open (list left right)))))))))
   (layer-walk-iter (list tree)))
-
-(define (build-from-layer-walk sequence)
-  ())
 
 (define (tree-general-list-print tree)
   (cond
