@@ -5,36 +5,30 @@
 ;;; We built threaded tree on binary tree
 (load "bin-tree+.scm")
 
-(define (node? node)
+(define (list-set! l k obj)
   (cond
-    ((null? node) #f)
-    ((tree? node))))
+    ((= k 0) (set-car! l obj))
+    (else
+      (list-set! (cdr l) (- k 1) obj))))
 
-(define (node-left node)
-  (cond
-    ((leaf? node) '())
-    ((tree? node) (tree-left))
-    ((node? node) (tree-left))
-    (else '())))
+(define (make-tree item left right)
+  (list item left right '() '()))
 
+(define (tree-ltag tree) (list-ref tree 3))
+(define (tree-rtag tree) (list-ref tree 4))
+(define (tree-set-left tree obj) (list-set! tree 1 obj))
+(define (tree-set-right tree obj) (list-set! tree 2 obj))
+(define (tree-set-ltag tree tag) (list-set! tree 3 tag))
+(define (tree-set-rtag tree tag) (list-set! tree 4 tag))
 
-(define (tree-travesal tree do-first do-second do-third do-atom)
-  (define thread-tree (list 'thread-tree '() tree tree))
-  (define (travesal-iter t tl)
-    (cond
-      ((null? t) tl)
-      ((leaf? t) (begin (do-atom t tl) t))
-      (else (begin
-              (set! tl (travesal-iter (do-first t) tl))
-              (set! tl (travesal-iter (do-second t) tl))
-              (set! tl (travesal-iter (do-third t) tl))
-              tl))))
-  (travesal-iter tree thread-tree)
-  thread-tree)
+(define (tree-traversal tree proc next prev)
+  )
 
-(define (inorder-thread-tree-find-prev tree))
-
-(define (inorder-thread-tree-find-post node))
-
-
+(define (tree-inorder-threading tree)
+  (define *prev* (cons '() tree))
+  (if (null? (tree-left))
+    (begin
+      (tree-set-rtag tree 'threaded)
+      (tree-set-right tree *prev*)
+      (if ())))
 

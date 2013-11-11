@@ -10,14 +10,12 @@
 (define (make-leaf item)
   (make-tree item '() '()))
 
-(define (tree-item tree)
-  (list-ref tree 0))
+(define (tree-item tree) (list-ref tree 0))
+(define (tree-left tree) (list-ref tree 1))
+(define (tree-right tree) (list-ref tree 2))
 
-(define (tree-left tree)
-  (list-ref tree 1))
-
-(define (tree-right tree)
-  (list-ref tree 2))
+(define (leaf? leaf) (and (null? (tree-left leaf))
+                          (null? (tree-right leaf))))
 
 ;;; General Stratege for Traversal
 ;;;
@@ -28,26 +26,23 @@
 (define (tree-traversal tree next proc trav)
   (if (null? tree)
     '()
-    (tree-traversal (next tree proc trav) next proc trav)))
+    (next tree proc trav)))
 
-;;; General Inorder Travelsal
+;;; Any traversak can build on tree-traversal
 (define (tree-inorder-traversal tree proc trav)
   (trav (tree-left tree) tree-inorder-traversal proc trav)
   (proc (tree-item tree))
-  (trav (tree-right tree) tree-inorder-traversal proc trav)
-  '())
+  (trav (tree-right tree) tree-inorder-traversal proc trav))
 
 (define (tree-preorder-traversal tree proc trav)
   (proc (tree-item tree))
   (trav (tree-left tree) tree-preorder-traversal proc trav)
-  (trav (tree-right tree) tree-preorder-traversal proc trav)
-  '())
+  (trav (tree-right tree) tree-preorder-traversal proc trav))
 
 (define (tree-postorder-traversal tree proc trav)
   (trav (tree-left tree) tree-postorder-traversal proc trav)
   (trav (tree-right tree) tree-postorder-traversal proc trav)
-  (proc (tree-item tree))
-  '())
+  (proc (tree-item tree)))
 
 (define (tree-inorder-display tree)
   (tree-inorder-traversal tree display tree-traversal))
@@ -57,19 +52,42 @@
 
 (define (tree-postorder-display tree)
   (tree-postorder-traversal tree display tree-traversal))
- 
+
+;;; Level traversal the tree
+(define (tree-level-traversal tree proc)
+  (do ((queue (cons tree '()) (cdr queue)))
+    ((null? queue) '())
+    (let ((root (car queue)))
+      (if (not (null? root))
+        (begin
+          (proc (tree-item root))
+          (append! queue (list (tree-left root) (tree-right root))))
+        '()))))
+
+(define (tree-level-display tree)
+  (tree-level-traversal tree display))
+
+;;; Print the tree as a general list -- something like cons cell
+;;; FIXED: A atom(leaf) isn't a list
+(define (tree-general-list-print tree)
+  (cond
+    ((null? tree) '())
+    ((leaf? tree)
+      (display (tree-item tree)))
+    (else
+      (display (tree-item tree))
+      (display "(")
+      (tree-general-list-print (tree-left tree))
+      (display ",")
+      (tree-general-list-print (tree-right tree))
+      (display ")"))))
+
+;;; This is a test tree
 (define t
   (make-tree 'A
     (make-tree 'B (make-leaf 'D)
                   (make-tree 'E (make-leaf 'H) '()))
-    (make-tree 'C (make-tree 'G (make-leaf 'I)
+    (make-tree 'C (make-tree 'F (make-leaf 'I)
                                 (make-leaf 'J))
-                  (make-tree 'F '() (make-leaf 'K)))))
+                  (make-tree 'G '() (make-leaf 'K)))))
 
-(newline)
-(tree-inorder-display t)
-(newline)
-(tree-preorder-display t)
-(newline)
-(tree-postorder-display t)
-(newline)
