@@ -82,12 +82,3 @@
       (tree-general-list-print (tree-right tree))
       (display ")"))))
 
-;;; This is a test tree
-(define t
-  (make-tree 'A
-    (make-tree 'B (make-leaf 'D)
-                  (make-tree 'E (make-leaf 'H) '()))
-    (make-tree 'C (make-tree 'F (make-leaf 'I)
-                                (make-leaf 'J))
-                  (make-tree 'G '() (make-leaf 'K)))))
-
