@@ -25,4 +25,13 @@
   (iter (append (trav tree) (list threaded)) threaded)
   (list-ref threaded 0))
 
+(define (tree-inorder-find-next node)
+  (if (eq? (tree-rtag node) 'thread)
+    (tree-right node)
+    (first (tree-inorder->list (tree-right node)))))
+
+(define (tree-preorder-find-next node)
+  (if (eq? (tree-rtag node) 'thread)
+    (tree-right node)
+    (first (tree-preorder->list (tree-left node)))))
 
