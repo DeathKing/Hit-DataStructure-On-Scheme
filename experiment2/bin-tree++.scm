@@ -23,6 +23,21 @@
 (define (tree-right tree) (list-ref tree 2))
 (define (tree-ltag tree) (list-ref tree 3))
 (define (tree-rtag tree) (list-ref tree 4))
+
+;;; Be compatibel with thread tree.
+;;; Returns its original.
+(define (tree-real-left tree)
+  (if (or (eq? (tree-ltag tree) 'thread)
+          (eq? (tree-ltag tree) 'head))
+    '()
+    (tree-left tree)))
+
+(define (tree-real-right tree)
+  (if (or (eq? (tree-rtag tree) 'thread)
+          (eq? (tree-rtag tree) 'head))
+    '()
+    (tree-right tree)))
+
 (define (tree-set-left! tree obj) (list-set! tree 1 obj))
 (define (tree-set-right! tree obj) (list-set! tree 2 obj))
 (define (tree-set-ltag! tree tag) (list-set! tree 3 tag))
@@ -59,18 +74,19 @@
     (next tree proc trav)))
 
 ;;; Level traversal the tree
-(define (tree-level-traversal tree proc)
-  (do ((queue (cons tree '()) (cdr queue)))
-    ((null? queue) '())
-    (let ((root (car queue)))
-      (if (not (null? root))
-        (begin
-          (proc (tree-item root))
-          (append! queue (list (tree-left root) (tree-right root))))
-        '()))))
+(define (tree-level->list tree)
+  (let loop ((s (list tree)) (l '()))
+    (if (null? s) l
+      (let ((c (car s)))
+        (if (not (eq? (tree-ltag c) 'thread))
+          (append! s (list (tree-left c))))
+        (if (not (eq? (tree-rtag c) 'thread))
+          (append! s (list (tree-right c))))
+        (loop (cdr s) (append l (list c)))))))
 
 (define (tree-level-display tree)
-  (tree-level-traversal tree display))
+   (map (lambda (x) (display (tree-item x)))
+    (tree-level->list tree)))
 
 ;;; Following procedure are written with the blief
 ;;; that we made list as a conventional interface.
@@ -80,22 +96,22 @@
 
 (define (tree-inorder->list tree)
   (define (iter t proc trav)
-    (append (if (eq? (tree-ltag t) '()) (trav (tree-left t) iter proc trav) '())
+    (append (trav (tree-real-left t) iter proc trav)
             (proc t)
-            (if (eq? (tree-rtag t) '()) (trav (tree-right t) iter proc trav) '())))
+            (trav (tree-real-right t) iter proc trav)))
   (iter tree list tree-traversal))
 
 (define (tree-preorder->list tree)
   (define (iter t proc trav)
     (append (proc t)
-            (if (eq? (tree-ltag t) '()) (trav (tree-left t) iter proc trav) '())
-            (if (eq? (tree-rtag t) '()) (trav (tree-right t) iter proc trav) '())))
+            (trav (tree-real-left t) iter proc trav)
+            (trav (tree-real-right t) iter proc trav)))
   (iter tree list tree-traversal))
 
 (define (tree-postorder->list tree)
   (define (iter t proc trav)
-    (append (if (eq? (tree-ltag t) '()) (trav (tree-left t) iter proc trav) '())
-            (if (eq? (tree-rtag t) '()) (trav (tree-right t) iter proc trav) '())
+    (append (trav (tree-real-left t) iter proc trav)
+            (trav (tree-real-right t) iter proc trav)
             (proc t)))
   (iter tree list tree-traversal))
 
