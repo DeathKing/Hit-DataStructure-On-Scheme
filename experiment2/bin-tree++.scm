@@ -35,6 +35,15 @@
 (define (leaf? leaf) (and (null? (tree-left leaf))
                           (null? (tree-right leaf))))
 
+;;; Read char form input port and build the tree
+(define (build-tree)
+  (let ((c (read-char)))
+    (if (eq? c #\$)
+      '()
+      (let* ((left (build-tree))
+             (right (build-tree)))
+        (make-tree c left right)))))
+
 ;;; General Stratege for Traversal
 ;;;
 ;;; tree -- tree need to traversal
