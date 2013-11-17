@@ -32,8 +32,11 @@
 (define (tree? tree) (and (not (null? tree))
                           (pair? tree)))
 
-(define (leaf? leaf) (and (null? (tree-left leaf))
-                          (null? (tree-right leaf))))
+(define (leaf? leaf)
+  (or (and (null? (tree-left leaf))
+           (null? (tree-right leaf)))
+      (and (eq? (tree-ltag leaf) 'thread)
+           (eq? (tree-rtag leaf) 'thread))))
 
 ;;; Read char form input port and build the tree
 (define (build-tree)
