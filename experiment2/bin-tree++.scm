@@ -77,11 +77,9 @@
 (define (tree-level->list tree)
   (let loop ((s (list tree)) (l '()))
     (if (null? s) l
-      (let ((c (car s)))
-        (if (not (eq? (tree-ltag c) 'thread))
-          (append! s (list (tree-left c))))
-        (if (not (eq? (tree-rtag c) 'thread))
-          (append! s (list (tree-right c))))
+      (let ((c (list-ref s 0)))
+        (if (not (eq? (tree-real-left c) '())) (append! s (list (tree-left c))))
+        (if (not (eq? (tree-real-right c) '())) (append! s (list (tree-right c))))
         (loop (cdr s) (append l (list c)))))))
 
 (define (tree-level-display tree)
