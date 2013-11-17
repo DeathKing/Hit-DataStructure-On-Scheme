@@ -83,14 +83,14 @@
     (append (if (eq? (tree-ltag t) '()) (trav (tree-left t) iter proc trav) '())
             (proc t)
             (if (eq? (tree-rtag t) '()) (trav (tree-right t) iter proc trav) '())))
-  (iter tree proc tree-traversal))
+  (iter tree list tree-traversal))
 
 (define (tree-preorder->list tree)
   (define (iter t proc trav)
     (append (proc t)
             (if (eq? (tree-ltag t) '()) (trav (tree-left t) iter proc trav) '())
             (if (eq? (tree-rtag t) '()) (trav (tree-right t) iter proc trav) '())))
-  (iter tree proc tree-traversal))
+  (iter tree list tree-traversal))
 
 (define (tree-postorder->list tree)
   (define (iter t proc trav)
