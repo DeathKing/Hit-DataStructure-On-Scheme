@@ -22,7 +22,7 @@
 
 (display "This is how bt shows inner.")
 (newline)
-bt
+(display bt)
 (newline)
 (display "Now show tree bt in general list.")
 (newline)
@@ -39,6 +39,11 @@ bt
 (newline)
 (display "Level Display: ")
 (tree-level-display bt)
-; (newline)
-;(define bbt (tree-thread bt tree-preorder->list))
-;(tree-general-list-display bbt)
+(newline)
+(define bbt (tree-thread bt tree-inorder->list))
+(display "The InOrder Thread Binary Tree of bt Should like:")
+(newline)
+(tree-general-list-display bbt)
+(newline)
+(format #t "C's next node is: ~A"
+        (tree-item (tree-inorder-find-next (tree-right bbt))))
