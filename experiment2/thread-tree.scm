@@ -2,7 +2,6 @@
 ;;;
 ;;; Written: DeathKing<dk@hit.edu.cn>
 
-(load-option 'format)
 (load "bin-tree++.scm")
 
 ;;; trav -- A procedure that returns the traversal sequence

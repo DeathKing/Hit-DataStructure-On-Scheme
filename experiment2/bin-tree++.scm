@@ -5,6 +5,8 @@
 ;;;
 ;;; Written: DeathKing<dk@hit.edu.cn>
 
+(load-option 'format)
+
 ;;; list-set!
 ;;; Like list-ref, but it set the Kth element in list
 (define (list-set! l k obj)
