@@ -34,3 +34,13 @@
     (tree-right node)
     (first (tree-preorder->list (tree-left node)))))
 
+(define (tree-inorder-find-next/iter node)
+  (if (eq? (tree-rtag node) 'thread)
+    (tree-right node)
+    (first (tree-inorder->list/iter (tree-right node)))))
+
+(define (tree-preorder-find-next/iter node)
+  (if (eq? (tree-rtag node) 'thread)
+    (tree-right node)
+    (first (tree-preorder->list/iter (tree-left node)))))
+

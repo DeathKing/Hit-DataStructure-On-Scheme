@@ -49,11 +49,10 @@
 (define (tree? tree) (and (not (null? tree))
                           (pair? tree)))
 
-(define (leaf? leaf)
-  (or (and (null? (tree-left leaf))
-           (null? (tree-right leaf)))
-      (and (eq? (tree-ltag leaf) 'thread)
-           (eq? (tree-rtag leaf) 'thread))))
+(define (leaf? leaf) (or (and (null? (tree-left leaf))
+                              (null? (tree-right leaf)))
+                         (and (eq? (tree-ltag leaf) 'thread)
+                              (eq? (tree-rtag leaf) 'thread))))
 
 ;;; Read char form input port and build the tree
 (define (build-tree)
@@ -71,22 +70,19 @@
 ;;; proc -- how to do with node's data
 ;;; trav -- the traversal procedure
 (define (tree-traversal tree next proc trav)
-  (if (null? tree)
-    '()
-    (next tree proc trav)))
+  (if (null? tree) '() (next tree proc trav)))
 
 ;;; Level traversal the tree
 (define (tree-level->list tree)
   (let loop ((s (list tree)) (l '()))
     (if (null? s) l
-      (let ((c (list-ref s 0)))
-        (if (not (eq? (tree-real-left c) '())) (append! s (list (tree-left c))))
-        (if (not (eq? (tree-real-right c) '())) (append! s (list (tree-right c))))
+      (let ((c (car s)))
+        (if (not (null? (tree-real-left c))) (append! s (list (tree-left c))))
+        (if (not (null? (tree-real-right c))) (append! s (list (tree-right c))))
         (loop (cdr s) (append l (list c)))))))
 
 (define (tree-level-display tree)
-   (map (lambda (x) (display (tree-item x)))
-    (tree-level->list tree)))
+   (map (lambda (x) (display (tree-item x))) (tree-level->list tree)))
 
 ;;; Following procedure are written with the blief
 ;;; that we made list as a conventional interface.
@@ -94,6 +90,9 @@
 ;;; Too much tricks and procedures passing here, you may
 ;;; get confuse at the first time. But, after all, it's amzing.
 
+;;; There contains two parts of them, one part is recursion version,
+;;; another part is the non-recursion version. You can find out that
+;;; the recursion version is much more beautiful than the other.
 (define (tree-inorder->list tree)
   (define (iter t proc trav)
     (append (trav (tree-real-left t) iter proc trav)
@@ -115,22 +114,65 @@
             (proc t)))
   (iter tree list tree-traversal))
 
+(define (tree-preorder->list/iter tree)
+  (let ((stack '()) (root tree) (seq '()))
+    (do () ((and (null? root) (null? stack)) seq)
+      (do () ((null? root) '())
+        (set! seq (append seq (list root)))
+        (set! stack (cons root stack))
+        (set! root (tree-real-left root)))
+      (if (not (null? stack))
+        (begin
+          (set! root (tree-real-right (car stack)))
+          (set! stack (cdr stack)))))))
+
+(define (tree-inorder->list/iter tree)
+  (let ((stack '()) (root tree) (seq '()))
+    (do () ((and (null? root) (null? stack)) seq)
+      (do () ((null? root) '())
+        (set! stack (cons root stack))
+        (set! root (tree-real-left root)))
+      (if (not (null? stack))
+        (begin
+          (set! root (tree-real-right (car stack)))
+          (set! seq (append seq (list (car stack))))
+          (set! stack (cdr stack)))))))
+
+(define (tree-postorder->list/iter tree)
+  (let ((stack '()) (root tree) (seq '()))
+    (do () ((and (null? root) (null? stack)) seq)
+      (do () ((null? root) '())
+        (set! stack (cons (cons root 1) stack))
+        (set! root (tree-real-left root)))
+      (do () ((or (null? stack) (not (eq? (cdar stack) 2))) '())
+        (set! seq (append seq (list (caar stack))))
+        (set! stack (cdr stack)))
+      (if (not (null? stack))
+        (begin
+          (set-cdr! (car stack) 2)
+          (set! root (tree-real-right (caar stack))))))))
+
 ;;; Display the tree in a specifical way
 (define (tree-inorder-display tree)
-  (map (lambda (x) (display (tree-item x)))
-    (tree-inorder->list tree)))
+  (map (lambda (x) (display (tree-item x))) (tree-inorder->list tree)))
 
 (define (tree-preorder-display tree)
-  (map (lambda (x) (display (tree-item x)))
-    (tree-preorder->list tree)))
+  (map (lambda (x) (display (tree-item x))) (tree-preorder->list tree)))
 
 (define (tree-postorder-display tree)
-  (map (lambda (x) (display (tree-item x)))
-    (tree-postorder->list tree)))
+  (map (lambda (x) (display (tree-item x))) (tree-postorder->list tree)))
+
+(define (tree-inorder-display/iter tree)
+  (map (lambda (x) (display (tree-item x))) (tree-inorder->list/iter tree)))
+
+(define (tree-preorder-display/iter tree)
+  (map (lambda (x) (display (tree-item x))) (tree-preorder->list/iter tree)))
+
+(define (tree-postorder-display/iter tree)
+  (map (lambda (x) (display (tree-item x))) (tree-postorder->list/iter tree)))
 
 (define (tree-general-list-display tree)
-  (if (null? tree)
-    '()
+  (if (null? tree) '()
     (begin
       (display (tree-item tree))
       (display "(")
