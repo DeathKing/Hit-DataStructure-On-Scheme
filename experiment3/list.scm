@@ -25,4 +25,5 @@
   (cond 
     ((= k 0) (set-car! l obj))
     (else
-      (list-set! (cdr l) (- k 1) obj))))  
+      (list-set! (cdr l) (- k 1) obj))))
+

@@ -3,10 +3,10 @@
 
 (define (make-graph vertex edge)
   (let* ((v (make-vector (length vertex) '())))
-    (do ((e edge (cdr edge)))
+    (do ((e edge (cdr e)))
       ((null? e) v)
-      (append! (vector-ref v (car e)) (list (cdr e)))
-      (append! (vector-ref v (cdr e)) (list (car e))))
+      (vector-set! v (caar e) (append (vector-ref v (caar e)) (list (cdar e))))
+      (vector-set! v (cdar e) (append (vector-ref v (cdar e)) (list (caar e)))))
     (list 'graph vertex v)))
 
 (define (make-digraph vertex edge)

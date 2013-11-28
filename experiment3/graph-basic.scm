@@ -1,8 +1,14 @@
 (define (graph-vertex g)
   (list-ref g 1))
 
-(define (make-node data . attribute)
-  (list 'node data attribute))
+(define (graph-edge g)
+  (list-ref g 2))
+
+(define (make-vertex data . attribute)
+  (list 'vertex data attribute))
+
+(define (list->vertex lst)
+  (make-vertex (list-ref lst 1) (cdr lst)))
 
 (define (graph? g)
   (cond
@@ -18,8 +24,8 @@
 
 (define (node? n)
   (cond
-    ((not (pair? n) #f))
-    ((eq? (car n) #t))
+    ((not (pair? n)) #f)
+    ((eq? (car n) 'vertex) #t)
     (else #f)))
 
 
