@@ -1,6 +1,5 @@
-;;; LIST extension of MIT-Scheme
-;;;
-;;; Written by: DeathKing<dk@hit.edu.cn>
+;;; LIST.SCM
+;;; Some useful list extension of MIT-Scheme
 
 ;;; LIST-INDEXP
 ;;; Returns the elements index user a procedure proc

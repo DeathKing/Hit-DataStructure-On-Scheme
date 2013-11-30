@@ -1,3 +1,6 @@
+;;; GRAPH-MATRIX.SCM
+;;; Build graph by using adjacency matrix.
+
 (load "list.scm")
 (load "matrix.scm")
 (load "graph-basic.scm")
@@ -15,7 +18,7 @@
   (let* ((s (length vertex)) (m (make-matrix s s 0)))
     (do ((e edge (cdr e)))
       ((null? e) m)
-      (matrix-set! m (caar e) (cdar r) 1))
+      (matrix-set! m (caar e) (cdar e) 1))
     (list 'digraph vertex m)))
 
 (define (vertex-neighbors vertex graph)

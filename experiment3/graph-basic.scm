@@ -1,3 +1,7 @@
+;;; GRAGP-BASIC.SCM
+;;; This is the basic funcion of graph, it defined some constructors
+;;; and selectors.
+
 (define (graph-vertex g)
   (list-ref g 1))
 
@@ -13,19 +17,16 @@
 (define (graph? g)
   (cond
     ((not (pair? g)) #f)
-    ((eq? (car g) 'graph) #t)
-    (else #f)))
+    (else (eq? (car g) 'graph))))
 
 (define (digraph? d)
   (cond
     ((not (pair? d)) #f)
-    ((eq? (car d) 'digraph) #t)
-    (else #f)))
+    (else (eq? (car d) 'digraph))))
 
 (define (node? n)
   (cond
     ((not (pair? n)) #f)
-    ((eq? (car n) 'vertex) #t)
-    (else #f)))
+    (else (eq? (car n) 'vertex))))
 
 

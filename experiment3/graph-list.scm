@@ -1,3 +1,6 @@
+;;; GRAPH-LIST
+;;; Build graph using adjacency list.
+
 (load "list.scm")
 (load "graph-basic.scm")
 
@@ -13,7 +16,7 @@
   (let* ((v (make-vector (length vertex) '())))
     (do ((e edge (cdr edge)))
       ((null? e) v)
-      (append! (list-ref v (car e)) (list (cdr e))))
+      (vector-set! v (caar e) (append (vector-ref v (caar e)) (list (cdar e)))))
     (list 'digraph vertex v)))
 
 (define (vertex-neighbors vertex graph)
