@@ -48,3 +48,15 @@
     (else
       (list-set! (cdr l) (- k 1) obj))))
 
+;;; VECTOR-INDEXP
+;;;
+(define (vector-indexp vec element proc)
+  (let ((l (vector-length vec)))
+    (let loop ((i 0))
+      (if (= i l) #f
+        (if (proc (vector-ref vec i) element)
+          i
+          (loop (+ i 1)))))))
+
+(define (vector-index vec element)
+  (vector-indexp vec element equal?))
