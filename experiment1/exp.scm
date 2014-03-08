@@ -1,8 +1,9 @@
-;;; Reverse Polish Notation Expression Calculator
+;;; SIMPLE REVERSE POLISH NOTATION EXPRESSION CALCULATOR
 ;;;
-;;; Written by: DeathKing<dk@hit.edu.cn>
+;;; AUTHOR:  DeathKing<dk#hit.edu.cn>
+;;; LICENSE: HIT/MIT
 
-(load "stack.scm")
+(load "../library/list/stack-list.scm")
 (load "string.scm")
 
 ;; Eval operator to procedure.

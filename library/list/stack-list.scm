@@ -1,16 +1,15 @@
-;;;; Simple stack implementation.
-;;;;
-;;;; Written by: DeathKing<dk@hit.edu.cn>
+;;; SIMPLE STACK IMPLEMENT / LIST VERSION
+;;;
+;;; AUTHOR:  DeathKing<dk#hit.edu.cn>
+;;; LICENSE: HIT/MIT
 
-(define (make-stack)
-  (cons 'stack '()))
+(define (make-stack) (list 'stack))
 
 (define (stack? s)
   (cond
     ((null? s) #f)
     ((not (pair? s)) #f)
-    (else
-      (eq? 'stack (car s)))))
+    (else (eq? 'stack (car s)))))
 
 (define (stack s)
   (if (stack? s)
