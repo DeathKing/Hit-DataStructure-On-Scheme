@@ -1,5 +1,5 @@
 (load "graph.scm")
-(load "string.scm")
+(load "../library/string.scm")
 
 (define input (open-input-file "data.in"))
 (define n (string->number (read-line input)))

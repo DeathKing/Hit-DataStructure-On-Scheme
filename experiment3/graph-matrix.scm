@@ -1,8 +1,8 @@
 ;;; GRAPH-MATRIX.SCM
 ;;; Build graph by using adjacency matrix.
 
-(load "list.scm")
-(load "matrix.scm")
+(load "../library/list.scm")
+(load "../library/matrix.scm")
 (load "graph-basic.scm")
 
 (define (make-graph vertex edge)

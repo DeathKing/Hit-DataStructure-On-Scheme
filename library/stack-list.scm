@@ -50,5 +50,3 @@
 
 (define (stack->list s)
   (reverse (stack s)))
-
-

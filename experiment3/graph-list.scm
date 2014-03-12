@@ -1,7 +1,7 @@
 ;;; GRAPH-LIST
 ;;; Build graph using adjacency list.
 
-(load "list.scm")
+(load "../library/list.scm")
 (load "graph-basic.scm")
 
 (define (make-graph vertex edge)
