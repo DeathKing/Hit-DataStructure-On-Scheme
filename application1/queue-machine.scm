@@ -45,5 +45,5 @@
   (if (< (random 100) 65)
     (m 'new)
     (m 'destory))
-  (run-shell-command (format #f "sleep ~A" (random 3)))
-  (if (< times 200) (loop (+ times 1))))
+  (run-shell-command (format #f "sleep ~A" (+ 1 (random 3))))
+  (if (< times 50) (loop (+ times 1))))

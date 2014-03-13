@@ -4,7 +4,7 @@
 ;;; LICENSE: HIT/MIT
 
 (load "../library/list/stack-list.scm")
-(load "string.scm")
+(load "../library/string.scm")
 
 ;; Eval operator to procedure.
 ;; For many reasons, We didn't use the eval procedure.

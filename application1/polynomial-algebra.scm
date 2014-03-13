@@ -1,5 +1,9 @@
 ;;; SIMPLE POLYNOMIAL ALGEBRA SYSTEM
 ;;;
+;;; If you're interesting in such system, you could checkout
+;;; the MAXIMA source code, which is developed by MIT-AI lab
+;;; and has some strong power to deal with algebra calculator
+;;;
 ;;; AUTHOR:  DeathKing<dk#hit.edu.cn>
 ;;; LICENSE: HIT/MIT
 
@@ -59,12 +63,16 @@
   ;;; TERM-DISPLAY-VAR: display the variable on the screen
   ;;; t - term
   (define (term-display-var t)
-    (display (term-var t)))
+    (if (or (null? (term-a t)) (eq? 0 (term-a t)))
+      #f
+      (display (term-var t))))
   
   ;;; TERM-DISPLAY-A: display the power
   ;;; t - term
   (define (term-display-a t)
-    (if (term-a t) (format #t "^~A" (term-a t))))
+    (if (or (null? (term-a t)) (eq? 0 (term-a t)))
+      #f
+      (format #t "^~A" (term-a t))))
 
   (cond
     ((= 0 (term-k t)) #f)
@@ -144,15 +152,24 @@
   (cond
     ((number? p1) (poly-scale p2 p1))
     ((number? p2) (poly-scale p1 p2))
-    ((and (monomial? p1) (monomial? p2)) (term-mul p1 p2))
+    ((and (monomial? p1) (monomial? p2))
+      (term-mul p1 p2))
     ((monomial? p1)
-      (poly-simplify (apply make-poly
-        (map term-mul (poly-terms p2) (make-list (poly-terms-length p2) p1)))))
+      (apply make-poly
+        (map term-mul (poly-terms p2) (make-list (poly-terms-length p2) p1))))
     ((monomial? p2)
-      (poly-simplify (apply make-poly
-        (map term-mul (poly-terms p1) (make-list (poly-terms-length p1) p2)))))
+      (apply make-poly
+        (map term-mul (poly-terms p1) (make-list (poly-terms-length p1) p2))))
     (else
-      (display "not implement yet!"))))
+      (apply make-poly
+        (apply append
+          (map
+            (lambda (t)
+              (map term-mul (poly-terms p2) (make-list (poly-terms-length p2) t)))
+            (poly-terms p1)))))))
+
+(define (poly-div p1 p2)
+  '())
 
 ;;; TERM-SCALE: scale a term
 ;;; t - term
@@ -176,6 +193,9 @@
     (apply make-poly
       (filter (lambda (x) (not (= 0 (term-k x)))) (poly-terms p)))))
 
+(define (poly-simplest? p)
+  '())
+
 ;;; POLY-SIMPLIFY: simplify a polynomial
 ;;; p - polynomial
 (define (poly-simplify p var)
@@ -187,14 +207,20 @@
             (hash-table/put! ht (term-a x) (term-k x)))))
       (poly-terms p))
       (poly-compact (apply make-poly
-        (map (lambda (a k) (make-term var k a)) (hash-table/alist ht)))))))
+        (map (lambda (t) (make-term var (cdr t) (car t))) (hash-table->alist ht)))))))
+
+;;; POLY-STANDERIZE: trans polynomial into standard form
+;;;   p - polynomial
+;;; var - the var
+(define (poly-standarize p var)
+  (poly-down-order (poly-simplify p var)))
 
 
 ;test code
 (define t1 (make-term 'x  0  0))
 (define t2 (make-term 'x  2  1))
 (define t3 (make-term 'x  5  3))
-(define t4 (make-term 'x -3  4))
+(define t4 (make-term 'x -3  3))
 (define t5 (make-term 'x -2 -3))
 
 (define p1 (make-poly t3 t5 t4))
@@ -205,9 +231,9 @@
 (newline)
 (poly-display p3)
 (newline)
-;(poly-display p4)
+(poly-display p4)
 (poly-display t2)
 (newline)
 ;(define p5 (poly-sub p3 p4))
-(define p5 (poly-mul p3 t2))
+(define p5 (poly-standarize (poly-mul p3 p4) 'x))
 (poly-display p5)

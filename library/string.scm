@@ -25,10 +25,10 @@
 (define (read-line . port)
   (let* ((char (apply read-char port)))
     (if (eof-object? char)
-	char
-	(do ((char char (apply read-char port))
-	     (clist '() (cons char clist)))
-	    ((or (eof-object? char) (char=? #\newline char))
-	     (list->string (reverse clist)))))))
+      char
+    	(do ((char char (apply read-char port))
+    	     (clist '() (cons char clist)))
+    	  ((or (eof-object? char) (char=? #\newline char))
+    	   (list->string (reverse clist)))))))
 
 
