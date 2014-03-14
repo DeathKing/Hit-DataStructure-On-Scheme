@@ -17,7 +17,7 @@
 
 ;;; POLY(NOMIAL) Cunstructor and selector
 (define (make-poly . z) (append (list 'poly) z))
-(define (poly-ref p i)  (list-ref p (- i 1)))
+(define (poly-ref p i)  (list-ref p (+ i 1)))
 (define (poly-terms p)  (sublist p 1 (length p)))
 (define (poly-terms-length p)
   (length (poly-terms p)))
@@ -25,6 +25,9 @@
 ;;; Predication
 (define (monomial? m)      (eq? 'term (list-ref m 0)))
 (define (polynomial? p)    (eq? 'poly (list-ref p 0)))
+(define (poly-only-const? p)
+  (and (= (poly-terms-length p) 1)
+    (zero? (term-a (poly-ref p 0)))))
 
 ;;; TERM-LIKE?: check whether t1 and t2 are like-term
 ;;; t1 - term a
@@ -63,14 +66,14 @@
   ;;; TERM-DISPLAY-VAR: display the variable on the screen
   ;;; t - term
   (define (term-display-var t)
-    (if (or (null? (term-a t)) (eq? 0 (term-a t)))
+    (if (or (null? (term-a t)) (zero? (term-a t)))
       #f
       (display (term-var t))))
   
   ;;; TERM-DISPLAY-A: display the power
   ;;; t - term
   (define (term-display-a t)
-    (if (or (null? (term-a t)) (eq? 0 (term-a t)))
+    (if (or (null? (term-a t)) (zero? (term-a t)))
       #f
       (format #t "^~A" (term-a t))))
 
@@ -85,9 +88,10 @@
 ;;;               shown if it's positive
 ;;; p - polynomial
 (define (poly-display p)
-  (if (monomial? p)
-    (term-display p #t)
-    (begin
+  (cond
+    ((monomial? p) (term-display p #t))
+    ((poly-only-const? p) (display (term-k (poly-ref p 0))))
+    (else
       (term-display (list-ref p 1) #t)
       (map term-display (sublist p 2 (length p))))))
 
@@ -129,9 +133,9 @@
         (iter x (cdr y) (append z (list (car y)))))
       (else
         (display "mismatched!"))))
-  (poly-simplify (apply make-poly
+  (apply make-poly
     (iter (if (monomial? p1) (list p1) (cdr p1))
-          (if (monomial? p2) (list p2) (cdr p2)) '()))))
+          (if (monomial? p2) (list p2) (cdr p2)) '())))
 
 ;;; POLY-SUB: polynomial subtraction, implement as poly-add
 ;;; p1 - polynomial a
@@ -190,8 +194,14 @@
 ;;; p - polynomial
 (define (poly-compact p)
   (if (monomial? p) p
-    (apply make-poly
-      (filter (lambda (x) (not (= 0 (term-k x)))) (poly-terms p)))))
+    (let ((cp (filter (lambda (x) (not (zero? (term-k x)))) (poly-terms p))))
+      (if (zero? (length cp))
+        (make-poly (make-term 'x 0 0))    
+        (apply make-poly cp)))))
+
+;;; POLY-EXPAND: expand a polynomia
+(define (poly-expand p)
+  '())
 
 (define (poly-simplest? p)
   '())
@@ -234,6 +244,9 @@
 (poly-display p4)
 (poly-display t2)
 (newline)
+(define p5 (poly-mul p4 -1))
+(define p6 (poly-add p4 p5))
 ;(define p5 (poly-sub p3 p4))
-(define p5 (poly-standarize (poly-mul p3 p4) 'x))
-(poly-display p5)
+;(define p5 (poly-standarize (poly-mul p3 p4) 'x))
+(define p7 (poly-standarize p6 'x))
+;(poly-display p7)
