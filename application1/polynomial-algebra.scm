@@ -136,6 +136,7 @@
   (apply make-poly
     (iter (if (monomial? p1) (list p1) (cdr p1))
           (if (monomial? p2) (list p2) (cdr p2)) '())))
+  ;(poly-simplify (apply make-poly (poly-terms p1) (poly-terms p2)) 'x))
 
 ;;; POLY-SUB: polynomial subtraction, implement as poly-add
 ;;; p1 - polynomial a
@@ -201,7 +202,12 @@
 
 ;;; POLY-EXPAND: expand a polynomia
 (define (poly-expand p)
-  '())
+  (let* ((pc (poly-terms (poly-down-order p)))
+         (head (term-a (list-ref pc 0)))
+         (tail (term-a (list-ref pc (- 1 (length pc)))))
+         (el (apply make-poly
+           (map (lambda (a) (make-term 'x 0 a)) (iota (+ 1 (- head tail)) head -1)))))
+    (poly-add p el)))
 
 (define (poly-simplest? p)
   '())
@@ -246,7 +252,9 @@
 (newline)
 (define p5 (poly-mul p4 -1))
 (define p6 (poly-add p4 p5))
-;(define p5 (poly-sub p3 p4))
+(define p5 (poly-add p3 p4))
 ;(define p5 (poly-standarize (poly-mul p3 p4) 'x))
-(define p7 (poly-standarize p6 'x))
-;(poly-display p7)
+;(define p7 (poly-standarize p6 'x))
+;(poly-display (poly-standarize p6 'x))
+;(define p5 (poly-expand p4))
+(display p5)

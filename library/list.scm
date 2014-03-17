@@ -61,6 +61,16 @@
     (else
       (list-set! (cdr l) (- k 1) obj))))
 
+;;; LIST-DELETE-AT!: Delete the Kth element in list, return default if default is
+;;;                  specific, otherwise return #f
+;;;(define (list-delete-at! l k #!optional default)
+;;;  (cond
+;;;    ((>= k (length l))
+;;;      (if (eq? #!default default) #f default))
+;;;    ((= k 0)
+;;;      (set! l (cdr l)))
+;;;    ()))
+
 ;;; VECTOR-INDEXP
 ;;;
 (define (vector-indexp vec element proc)

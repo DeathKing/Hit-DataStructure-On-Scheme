@@ -18,7 +18,7 @@
 
   (define (new)
     (let ((l (counts)))
-      (format #t "You're no.~A, and there are ~A customer(s) before you.\n" *i* l)
+      (format #t "You're no.\033[32;49;1m~A\033[39;49;0m, and there are \033[32;49;1m~A\033[39;49;0m customer(s) before you.\n" *i* l)
       (enqueue! *m* *i*)
       (set! *i* (+ *i* 1))))
 
@@ -28,7 +28,7 @@
   (define (destory)
     (if (empty?) #f
       (let ((c (dequeue! *m*)))
-        (format #t "Customer no.~A, please.\n" c))))
+        (format #t "\033[33;49;1mCustomer no.~A, please.\033[39;49;0m\n" c))))
 
   (define (dispatch op)
     (case op
