@@ -1,0 +1,12 @@
+graph bintree {
+a:sw -- b [splines=line];
+b:sw -- e [splines=line];
+b:se -- c [splines=line];
+c:se -- d [splines=line];
+a:se -- f [splines=line];
+f:sw -- g [splines=line];
+f:se -- h [splines=line];
+h:sw -- i [splines=line];
+i:se -- j [splines=line];
+j:sw -- k [splines=line];
+}

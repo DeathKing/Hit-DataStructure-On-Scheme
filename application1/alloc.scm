@@ -27,7 +27,6 @@
   (set-cdr! r next))
 (define (record-data-set! r data) (set-car! r data))
 
-
 (define (memory-alloc! m)
   (let ((p (record-next (memory-avali-record m))))
     (if (= p -1) -1
@@ -39,6 +38,8 @@
   (record-next-set! (memory-ref m q) (record-next (memory-avali-record m)))
   (record-next-set! (memory-avali-record m) q))
 
-(define m (make-memory))
 
+;;; Test Code
+
+(define m (make-memory))
 (define a (memory-alloc! m))

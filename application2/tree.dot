@@ -1,0 +1,25 @@
+graph tree {
+null -- a;
+a -- b;
+b -- e;
+{ rank=same; e }
+{ rank=same; b c d }
+a -- c;
+{ rank=same; c d }
+a -- d;
+{ rank=same; d }
+{ rank=same; a f h }
+null -- f;
+f -- g;
+{ rank=same; g }
+{ rank=same; f h }
+null -- h;
+h -- i;
+{ rank=same; i j }
+h -- j;
+j -- k;
+{ rank=same; k }
+{ rank=same; j }
+{ rank=same; h }
+{ rank=same; null }
+}
