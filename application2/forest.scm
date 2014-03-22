@@ -40,36 +40,17 @@
         (rec (tree-sibling s) (append l (list s)))))))
 
 (define (tree-childs tree)
-  (if (tree-child-empty? tree) '()
-    (tree-siblings (tree-child tree))))
+  (if (tree-child-empty? tree) '() (tree-siblings (tree-child tree))))
 
-(define (bintree-set-left! bin left)
-  (vector-set! bin 1 left))
+(define (bintree-set-left! bin left)     (vector-set! bin 1 left))
+(define (bintree-set-right! bin right)   (vector-set! bin 2 right))
+(define (tree-set-child! tree child)     (vector-set! tree 1 child))
+(define (tree-set-sibling! tree sibling) (vector-set! tree 2 sibling))
 
-(define (bintree-set-right! bin right)
-  (vector-set! bin 2 right))
-
-(define (tree-set-child! tree child)
-  (vector-set! tree 1 child))
-
-(define (tree-set-sibling! tree sibling)
-  (vector-set! tree 2 sibling))
-
-(define (bintree-left-empty? bin)
-  (let ((l (bintree-left bin)))
-    (or (eq? #!default l) (null? l))))
-
-(define (bintree-right-empty? bin)
-  (let ((r (bintree-right bin)))
-    (or (eq? #!default r) (null? r))))
-
-(define (tree-child-empty? tree)
-  (let ((c (tree-child tree)))
-    (or (eq? #!default c) (null? c))))
-
-(define (tree-terminal-sibling? tree)
-  (let ((s (tree-sibling tree)))
-    (or (eq? #!default s) (null? s))))
+(define (bintree-left-empty? bin)     (null? (bintree-left bin)))
+(define (bintree-right-empty? bin)    (null? (bintree-right bin)))
+(define (tree-child-empty? tree)      (null? (tree-child tree)))
+(define (tree-terminal-sibling? tree) (null? (tree-sibling tree)))
 
 (define (tree->bintree t)
   (make-bintree (tree-data t)
