@@ -60,3 +60,6 @@
 (display "After heap sort:")
 (heap-sort! v <)
 (display v)
+(heap-sort! v >)
+(newline)
+(display v)
