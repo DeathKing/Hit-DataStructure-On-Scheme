@@ -24,7 +24,7 @@
 
 
 (define lvs
-  (list (cons 0 0) (cons 1 1) (cons 2 2) (cons 3 3) (cons 4 4) (cons 5 5)))
+  (list (cons 0 'A) (cons 1 'B) (cons 2 'C) (cons 3 'D) (cons 4 'E) (cons 5 'F)))
 
 (define egs
   (list
@@ -40,3 +40,4 @@
 
 ;(define srte (sort (graph-edges g) (lambda (i j) (< (edge-weight i) (edge-weight j)))))
 (define sg (mst-kruskal g))
+(graph-plot sg "kruskal.dot")
