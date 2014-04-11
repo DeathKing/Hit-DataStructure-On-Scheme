@@ -39,6 +39,19 @@
       (iota row))
     (cdr r)))
 
+(define (graph-vertex-edges graph vertex)
+  (let* ((r (cons '() '()))
+         (vc (graph-vertex-count graph))
+         (ui (car vertex))
+         (u (vector-ref (graph-edge graph) ui)))
+    (for-each
+      (lambda (vi)
+        (let ((w (vector-ref u vi)))
+          (if (not (eq? *edge-unreachable* w))
+            (append! r (list (make-edge ui vi w))))))
+      (iota vc))
+    (cdr r)))
+
 (define (graph-vertex-count graph)
   (length (graph-vertex graph)))
 
@@ -69,8 +82,8 @@
 (define (graph-plot graph file)
   
   (define (plot-edge e p)
-    (let* ((ui (edge-ui e)) (ud (vertex-data (graph-vertex-ref graph ui)))
-           (vi (edge-vi e)) (vd (vertex-data (graph-vertex-ref graph vi)))
+    (let* ((ui (edge-ui e)) (ud (vertex-attribute (graph-vertex-ref graph ui)))
+           (vi (edge-vi e)) (vd (vertex-attribute (graph-vertex-ref graph vi)))
            (weight (edge-weight e)))
       (format p "~A -- ~A [label=~A];~%" ud vd weight)))
 
