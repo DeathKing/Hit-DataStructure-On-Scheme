@@ -1,0 +1,10 @@
+digraph g {
+a -> b [label=6, shape=diamond];
+a -> c [label=1, shape=diamond];
+b -> f [label=5, shape=diamond];
+c -> d [label=5, shape=diamond];
+c -> f [label=4, shape=diamond];
+d -> a [label=2, shape=diamond];
+e -> b [label=6, shape=diamond];
+f -> e [label=6, shape=diamond];
+}

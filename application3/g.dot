@@ -1,0 +1,12 @@
+graph g {
+1 -- 0 [label=6];
+2 -- 0 [label=1];
+2 -- 1 [label=5];
+3 -- 0 [label=5];
+3 -- 2 [label=5];
+4 -- 1 [label=3];
+4 -- 2 [label=6];
+5 -- 2 [label=4];
+5 -- 3 [label=2];
+5 -- 4 [label=6];
+}

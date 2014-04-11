@@ -71,10 +71,19 @@
 ;;;     vi: the index of vertex v
 ;;;  graph: the graph
 (define (vertex-adjacent? ui vi diagraph)
-  (eq? *edge-unreachable* (matrix-ref (diagraph-edge diagraph) ui vi)))
+  (not (eq? *edge-unreachable* (matrix-ref (diagraph-edge diagraph) ui vi))))
 
 (define (diagraph-vertex-ref diagraph index)
   (list-ref (diagraph-vertex diagraph) index))
+
+(define (diagraph-transpose diagraph)
+  (let* ((v (diagraph-vertex diagraph))
+         (m (diagraph-edge diagraph))
+         (mt (matrix-copy m)))
+    (matrix-each-with-index m
+      (lambda (r c v)
+        (matrix-set! mt v c r)))
+    (cons v mt)))
 
 (define (diagraph-plot diagraph file)
   
