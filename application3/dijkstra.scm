@@ -1,11 +1,11 @@
 (load "diagraph.scm")
 
 (define (dijkstra diagraph u)
-  (let ((s (cons u '()))
-        (vc (diagraph-vertex-count diagraph))
-        (d (make-vector vc *edge-unreachable*))
-        (edges (diagraph-vertex-edges diagraph u))
-        (proc (lambda (x y) (< (edge-weight x) (edge-weight y)))))  ;;; proc that compare each edges
+  (let* ((s (cons u '()))
+         (vc (diagraph-vertex-count diagraph))
+         (d (make-vector vc *edge-unreachable*))
+         (edges (diagraph-vertex-edges diagraph u))
+         (proc (lambda (x y) (< (edge-weight x) (edge-weight y)))))  ;;; proc that compare each edges
     (vector-set! d (vertex-data u) 0)
     (for-each (lambda (e)
       (if (not (eq? *edge-unreachable* (edge-weight e)))
@@ -26,14 +26,15 @@
                             (+ (vector-ref d ui) weight)))
                   (vector-set! d vi (+ (vector-ref d ui) weight)))))
             (diagraph-vertex-edges diagraph u))
-          (loop (sort (cdr (append edges (diagraph-vertex-edges diagraph u)))) proc))))
+          (append! s (list u))
+          (loop (sort (cdr (append edges (diagraph-vertex-edges diagraph u))) proc)))))
     (for-each
       (lambda (x)
         (let ((weight (vector-ref d x))
               (ud (vertex-attribute u))
-              (vd (vertex-atrribute (diagraph-vertex-ref diagraph x))))
+              (vd (vertex-attribute (diagraph-vertex-ref diagraph x))))
           (if (not (eq? *edge-unreachable* weight))
-            (display #t "~A to ~A costs ~A.~%" ud vd weight))))
+            (format #t "~A to ~A costs ~A.~%" ud vd weight))))
       (iota vc))))
 
 

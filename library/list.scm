@@ -71,6 +71,10 @@
 ;;;      (set! l (cdr l)))
 ;;;    ()))
 
+
+(define (list-delete!/once lst element)
+  '())
+
 ;;; VECTOR-INDEXP
 ;;;
 (define (vector-indexp vec element proc)

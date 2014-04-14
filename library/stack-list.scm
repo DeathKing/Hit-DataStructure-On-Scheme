@@ -25,6 +25,9 @@
 (define (stack-print s)
   (display (reverse (stack s))))
 
+(define (stack-member s e)
+  (member e (stack s)))
+
 (define (stack-top s)
   (if (stack-empty? s)
     (error "Stack is empty. --" stack-top s)
